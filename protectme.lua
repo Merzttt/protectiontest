@@ -22,7 +22,16 @@ end
 
 local function initialize()
     local whitelistChecked = false
-
+    
+    if syn and syn.request then
+        local req = syn.request
+    elseif request then
+        local req = request
+    end
+    if islclosure(req) then
+        while true do end
+    end
+    
     if game:GetService("RunService"):IsStudio() and not checkHWID() then
         warn("Unauthorized access detected")
     else
@@ -36,19 +45,3 @@ local function initialize()
 end
 
 initialize()
-
-
-local startedTime = tick();
-Script = dumpstring(Script);
-
-Script = Script:gsub(".", function(x)
-   return "\\" .. x:byte();
-end);
-
-setclipboard(([[
--- Simple protection
--- Bytecode Hash: %s
-loadstring('%s')()
-]]):format(syn.crypt.hash(Script), Script));
-
-print(("Finished in %s sec"):format(tick() - startedTime))
